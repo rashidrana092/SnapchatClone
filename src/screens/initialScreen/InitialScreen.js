@@ -8,6 +8,7 @@ import imagePath from '../../constants/imagePath';
 import BtnComp from '../../components/BtnComp';
 import colors from '../../styles/colors';
 import navigationStrings from '../../constants/navigationStrings';
+import strings from '../../constants/lang';
 
 const InitialScreen = ({navigation}) => {
   const moveToScreen = screen => () => {
@@ -19,11 +20,11 @@ const InitialScreen = ({navigation}) => {
       style={{flex: 1, justifyContent: 'flex-end'}}
       source={imagePath.bgImage}>
       <BtnComp
-        btnText={'Log In'}
+        btnText={strings.LOGIN}
         onPress={moveToScreen(navigationStrings.LOGIN)}
       />
       <BtnComp
-        btnText={'Sign up'}
+        btnText={strings.SIGNUP}
         btnStyle={{backgroundColor: colors.blue}}
         onPress={moveToScreen(navigationStrings.SIGNUP)}
       />

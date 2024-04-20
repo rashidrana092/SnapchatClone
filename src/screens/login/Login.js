@@ -1,17 +1,16 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 // constants
 import strings from '../../constants/lang';
 
 // custom components
+import {Alert, Text, TouchableOpacity, View} from 'react-native';
+import BtnComp from '../../components/BtnComp';
 import Header from '../../components/Header';
 import TextinputWithLable from '../../components/TextinputWithLable';
 import WrapperContainer from '../../components/WrapperContainer';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import commonStyles from '../../styles/commonStyles';
+import styles from './styles';
 import colors from '../../styles/colors';
-import BtnComp from '../../components/BtnComp';
-import {moderateScale} from '../../styles/responsiveSize';
 
 const Login = () => {
   // instead of declaring multiple states for mulitple things, i am declaring one state for all purposes
@@ -20,17 +19,32 @@ const Login = () => {
     email: '',
     password: '',
     isSecure: true,
+    isEnable: false,
   });
   // destructuring above state
   // if we do not destructure then we have to access these like this state.email etc
-  const {isLoading, email, password, isSecure} = state;
+  const {isLoading, email, password, isSecure, isEnable} = state;
   const updateState = data => setState(state => ({...state, ...data}));
+
+  useEffect(() => {
+    if (email !== '' && password !== '') {
+      updateState({isEnable: true});
+      return;
+    }
+    updateState({isEnable: false});
+  }, [email, password]);
+
+  const onLogin = () => {
+    Alert.alert('login button clicked');
+  };
 
   return (
     <WrapperContainer isLoading={isLoading}>
       <Header />
       <View style={{flex: 1, justifyContent: 'space-between'}}>
         <View>
+          <Text style={styles.headingText}>{strings.LOGIN}</Text>
+
           <TextinputWithLable
             label={strings.USERNAME_OR_EMAIL}
             placeholder={strings.PLEASE_ENTER_YOUR_EMAIL}
@@ -55,9 +69,14 @@ const Login = () => {
         </View>
 
         <BtnComp
+          isDisable={!isEnable}
           btnText={strings.LOGIN}
-          btnStyle={styles.btnStyle}
+          btnStyle={{
+            ...styles.btnStyle,
+            backgroundColor: isEnable ? colors.blue : colors.blackOpacity20,
+          }}
           textStyle={styles.textStyle}
+          onPress={onLogin}
         />
       </View>
     </WrapperContainer>
@@ -65,21 +84,3 @@ const Login = () => {
 };
 
 export default Login;
-
-const styles = StyleSheet.create({
-  forgotTextStyle: {
-    ...commonStyles.fontSize12,
-    color: colors.blue,
-  },
-  btnStyle: {
-    borderRadius: moderateScale(54),
-    height: moderateScale(48),
-    backgroundColor: colors.blackOpacity20,
-    marginHorizontal: moderateScale(34),
-  },
-  textStyle: {
-    ...commonStyles.fontSize14,
-    color: colors.white,
-    textTransform: 'none',
-  },
-});
